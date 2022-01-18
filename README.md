@@ -1,6 +1,4 @@
-# tennis-js
-
-## Rules
+# tennis
 
 A tennis match is composed of points, games and sets. The rules of counting points within a game are exposed next. Your task is to implement this logic and expose a method which returns the current score as a string for display.
 
@@ -10,17 +8,3 @@ A tennis match is composed of points, games and sets. The rules of counting poin
 - If the game is deuce, the next scoring player has “advantage”.
 - If the player with advantage scores next, they win the game.
 - If the player without advantage scores next, the game is back to deuce.
-
-## Installation
-
-```
-git clone https://github.com/mathieueveillard/tennis-js.git
-cd tennis-js
-npm install
-```
-
-## Development
-
-```
-npm test
-```
