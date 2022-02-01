@@ -1,15 +1,15 @@
-type Player = "PLAYER1" | "PLAYER2";
+export type Player = "PLAYER1" | "PLAYER2";
 
 type Point = 0 | 1 | 2 | 3;
 
-type Points = Record<Player, Point>;
+type Scores = Record<Player, Point>;
 
-const PointsOnStartingGame: Points = {
+const INITIAL_SCORES: Scores = {
   PLAYER1: 0,
   PLAYER2: 0
 };
 
-const PointsDisplay: Record<Point, string> = {
+const POINTS_DISPLAY: Record<Point, string> = {
   0: "Love",
   1: "15",
   2: "30",
@@ -17,14 +17,23 @@ const PointsDisplay: Record<Point, string> = {
 };
 
 interface Game {
-  score(player: Player): Game;
+  player1Scores(): Game;
+  player2Scores(): Game;
   displayScore(): string;
 }
 
-export class OngoingGame implements Game {
-  constructor(private points: Points = PointsOnStartingGame) {}
+class OngoingGame implements Game {
+  constructor(private readonly points: Scores = INITIAL_SCORES) {}
 
-  score(player: Player) {
+  player1Scores() {
+    return this.score("PLAYER1");
+  }
+
+  player2Scores() {
+    return this.score("PLAYER2");
+  }
+
+  private score(player: Player): Game {
     if (this.points[player] === 3) {
       return new EndedGame(player);
     }
@@ -38,24 +47,45 @@ export class OngoingGame implements Game {
   }
 
   displayScore() {
-    return `${PointsDisplay[this.points.PLAYER1]}-${PointsDisplay[this.points.PLAYER2]}`;
+    return `${POINTS_DISPLAY[this.points.PLAYER1]}-${POINTS_DISPLAY[this.points.PLAYER2]}`;
   }
 }
 
 class EndedGame implements Game {
-  constructor(private winner: Player) {}
+  constructor(private readonly winner: Player) {}
 
-  score(): Game {
+  player1Scores() {
+    return this.score();
+  }
+
+  player2Scores() {
+    return this.score();
+  }
+
+  private score(): Game {
     throw Error("This game has already ended!");
   }
 
   displayScore() {
-    return `${this.winner} wins`;
+    switch (this.winner) {
+      case "PLAYER1":
+        return "Player 1 wins";
+      case "PLAYER2":
+        return "Player 2 wins";
+    }
   }
 }
 
 class DeuceGame implements Game {
-  score(player: Player) {
+  player1Scores() {
+    return this.score("PLAYER1");
+  }
+
+  player2Scores() {
+    return this.score("PLAYER2");
+  }
+
+  private score(player: Player): Game {
     return new AdvantageGame(player);
   }
 
@@ -65,17 +95,34 @@ class DeuceGame implements Game {
 }
 
 class AdvantageGame implements Game {
-  constructor(private advantagedPlayer: Player) {}
+  constructor(private readonly advantagedPlayer: Player) {}
 
-  score(player: Player) {
-    return player === this.advantagedPlayer ? new EndedGame(player) : new DeuceGame();
+  player1Scores() {
+    return this.score("PLAYER1");
+  }
+  player2Scores() {
+    return this.score("PLAYER2");
+  }
+
+  private score(player: Player): Game {
+    if (player === this.advantagedPlayer) {
+      return new EndedGame(player);
+    }
+    return new DeuceGame();
   }
 
   displayScore() {
-    return `Advantage ${this.advantagedPlayer}`;
+    switch (this.advantagedPlayer) {
+      case "PLAYER1":
+        return "Advantage Player 1";
+      case "PLAYER2":
+        return "Advantage Player 2";
+    }
   }
 }
 
 function other(player: Player): Player {
   return player === "PLAYER1" ? "PLAYER2" : "PLAYER1";
 }
+
+export default OngoingGame;
