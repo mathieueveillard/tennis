@@ -1,5 +1,7 @@
 # tennis
 
+![Nadal-Medvedev Australian Open](./NadalMedvedevAustralianOpen.png)
+
 A tennis match is composed of points, games and sets. The rules of counting points within a game are exposed next. Your task is to implement this logic and expose a method which returns the current score as a string for display.
 
 - Points are referred to as “love”, “15”, “30” and “40”
